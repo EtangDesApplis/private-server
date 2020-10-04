@@ -10,7 +10,7 @@ docker run -d -v /home/minwoo/.ssh/rsa_pi:/root/.ssh \
            etangdesapplis/ip-exporter
 ```
 
-## Howw to fine tuning
+## How to fine-tuning
 By default, the IPs verification is done every 300s (5 minutes), and the git repository is updated no matter what every 86400s (24 hours). To override the default, for example:
 ```
 docker run -d -v /home/minwoo/.ssh/rsa_pi:/root/.ssh \
