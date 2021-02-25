@@ -70,19 +70,95 @@ User will then import this certificat in their trust store to trust any web serv
 ## Server
 Create server private key
 ```
-openssl genrsa  -out privkey.pem 2048
+openssl genrsa  -out server-key.pem 2048
 ```
 Create certificate signing request to be signed by CA
 ```
-openssl req -new -key privkey.pem -out cert.csr
+openssl req -new -key server-key.pem -out server-cert.csr
 #FR , Garonne , Toulouse , MySite , IT , mysite.com , myemail@gmail.com
 ```
 
 ## Signing CSR
-CA uses their private key (CA-key.pem) to sign the CSR (cert.csr)
+CA uses their private key (CA-key.pem) to sign the CSR (server-cert.csr)
 ```
-openssl x509 -req -days 365 -in cert.csr -CA CA-cert.pem -CAkey CA-key.pem -CAcreateserial -out server-cert.pem 
+openssl x509 -req -days 365 -in server-cert.csr -CA CA-cert.pem -CAkey CA-key.pem -CAcreateserial -out server-cert.pem 
 ```
 CA sends back the signed certificate (server-cert.pem) to the requester.
 
 # NGINX with HTTPS
+To set up SSL for web server, one would need: server-key.pem and server-cert.pem (signed previously be CA)
+
+```
+sudo mkdir /etc/ssl
+sudo cp server-key.pem /etc/ssl/
+sudo cp server-cert.pem /etc/ssl/
+```
+
+Modify the configuration file of nginx
+```
+sudo vi /etc/nginx/nginx.conf
+```
+
+```
+#user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+
+events {
+	worker_connections 768;
+	# multi_accept on;
+}
+
+http {
+       
+	##
+	# Basic Settings
+	##
+
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
+	# server_tokens off;
+
+	# server_names_hash_bucket_size 64;
+	# server_name_in_redirect off;
+
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+        
+        server {
+          listen 443 ssl;
+          ssl_certificate /etc/ssl/server-cert.pem;
+          ssl_certificate_key /etc/ssl/server-key.pem;
+          server_name mysite.com;
+          location / {
+            root /var/www/html;
+          }
+        } 
+	##
+	# SSL Settings
+	##
+
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3; # Dropping SSLv3, ref: POODLE
+	ssl_prefer_server_ciphers on;
+
+	##
+	# Logging Settings
+	##
+
+	access_log /var/log/nginx/access.log;
+	error_log /var/log/nginx/error.log;
+
+	##
+	# Gzip Settings
+	##
+
+	gzip on;
+
+}
+
+```
+
+On premise user will then need to add the CA certificate (CA-cert.pem) to their trust store to access to the web service with HTTPS
