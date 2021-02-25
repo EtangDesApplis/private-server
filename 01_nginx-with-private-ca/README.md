@@ -41,8 +41,10 @@ vi /var/www/html/index.html
 </html>
 
 ```
-Refresh the web navigator to see the modification effect
+Refresh the web navigator to see the modification effect.
+
 ![nginx-with-private-ca](nginx-http.png)
+
 This web page is not secured. It means that information exchange between your web navigator and web server is not encrypted.
 For example, credit card number sent to http web server can be captured and read by hacker
 # Certificates
