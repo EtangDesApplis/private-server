@@ -43,14 +43,14 @@ vi /var/www/html/index.html
 ```
 Refresh the web navigator to see the modification effect.
 
-![nginx-with-private-ca](nginx-http.png)
+![nginx-with-http](nginx-http.png)
 
 This web page is not secured. It means that information exchange between your web navigator and web server is not encrypted.
 For example, credit card number sent to http web server can be captured and read by hacker
 # Certificates
 
 ## CA
-Certificate Authority is an organiastion that certifies that the certificate (public rsa key) provided when using HTTPS protocol correponds to the domain name that user accesses to.
+Certificate Authority is an organisation that certifies that the certificate (public rsa key) provided when using HTTPS protocol correponds to the domain name that user accesses to.
 Let's Encrypt, for example is a CA that provide free certificate signing service.
 In the on-premise environment, we will have the private CA to do the job.
 
@@ -89,9 +89,9 @@ CA sends back the signed certificate (server-cert.pem) to the requester.
 To set up SSL for web server, one would need: server-key.pem and server-cert.pem (signed previously be CA)
 
 ```
-sudo mkdir /etc/ssl
-sudo cp server-key.pem /etc/ssl/
-sudo cp server-cert.pem /etc/ssl/
+sudo mkdir /root/ssl
+sudo cp server-key.pem /root/ssl/
+sudo cp server-cert.pem /root/ssl/
 ```
 
 Modify the configuration file of nginx
@@ -130,8 +130,8 @@ http {
         
         server {
           listen 443 ssl;
-          ssl_certificate /etc/ssl/server-cert.pem;
-          ssl_certificate_key /etc/ssl/server-key.pem;
+          ssl_certificate /root/ssl/server-cert.pem;
+          ssl_certificate_key /root/ssl/server-key.pem;
           server_name mysite.com;
           location / {
             root /var/www/html;
@@ -158,7 +158,21 @@ http {
 	gzip on;
 
 }
-
+```
+Reload nginx service:
+```
+sudo nginx -s reload
 ```
 
-On premise user will then need to add the CA certificate (CA-cert.pem) to their trust store to access to the web service with HTTPS
+On premise user will then need to add the CA certificate (CA-cert.pem) to their trust store to access to the web service with HTTPS.
+
+For example, with firefox as web navigator:
+```
+Preferences > Private & Security > Certificates > View Certificates > Import
+```
+Access to this URL in firefox navigator
+```
+https://mysite.com
+```
+
+![nginx-with-https](nginx-https.png)
