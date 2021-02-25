@@ -12,7 +12,7 @@ To check the status of the nginx daemon
 ```
 sudo systemctl status nginx
 ```
-Associate a domain name to IPv4 of the vm
+On host machine (here linux), associate a domain name to IPv4 of the vm
 ```
 echo "192.168.1.X mysite.com" >> /etc/hosts
 ```
@@ -41,6 +41,8 @@ vi /var/www/html/index.html
 </html>
 
 ```
+Refresh the web navigator to see the modification effect
+![nginx-with-private-ca](nginx-http.png)
 This web page is not secured. It means that information exchange between your web navigator and web server is not encrypted.
 For example, credit card number sent to http web server can be captured and read by hacker
 # Certificates
@@ -74,8 +76,7 @@ openssl req -new -key privkey.pem -out cert.csr
 #FR , Garonne , Toulouse , MySite , IT , mysite.com , myemail@gmail.com
 ```
 
-## CSR & Signature
-
+## Signing CSR
 CA uses their private key (CA-key.pem) to sign the CSR (cert.csr)
 ```
 openssl x509 -req -days 365 -in cert.csr -CA CA-cert.pem -CAkey CA-key.pem -CAcreateserial -out server-cert.pem 
