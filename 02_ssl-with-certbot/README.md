@@ -21,7 +21,7 @@ Create through DNS provider interface the DNS TXT record
 
 ```
 TYPE: DNS TXT
-NAME: _acme-challenge.chefphan.com
+HOST: _acme-challenge # even if you are asked to create _acme-challenge.chefphan.com namecheap requirement
 VALUE: <TOKEN>
 ```
 
