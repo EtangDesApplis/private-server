@@ -29,3 +29,7 @@ To check if the DNS TXT record is active (before proceed further on certbot proc
 ```
 dig -t txt _acme-challenge.chefphan.com
 ```
+To auto renew with traefik:
+```
+https://sysadmins.co.za/https-using-letsencrypt-and-traefik-with-k3s/
+```
