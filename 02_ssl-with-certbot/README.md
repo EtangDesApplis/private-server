@@ -33,3 +33,19 @@ To auto renew with traefik:
 ```
 https://sysadmins.co.za/https-using-letsencrypt-and-traefik-with-k3s/
 ```
+
+Ingress Nginx is deployed with helm in kube-system
+```
+controller:
+  extraArgs:
+    default-ssl-certificate: kube-system/ssl-secret
+  image:
+    digest: sha256:9f61cdb1cd1dd720be2ef1a69002ad92cd5dc25302c36cc806ff36889d5a8f6d
+    repository: quay.io/kubernetes-ingress-controller/nginx-ingress-controller-arm
+    tag: 0.32.0
+```
+In secret ssl-secret, type kubernetes.io/tls:
+```
+tls.crt => fullchain.pem
+tls.key => privkey.pem
+```
