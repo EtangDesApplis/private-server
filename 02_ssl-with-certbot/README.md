@@ -29,6 +29,10 @@ To check if the DNS TXT record is active (before proceed further on certbot proc
 ```
 dig -t txt _acme-challenge.chefphan.com
 ```
+Otherwise, use the following url
+```
+https://toolbox.googleapps.com/apps/dig/#TXT/_acme-challenge.chefphan.com
+```
 To auto renew with traefik:
 ```
 https://sysadmins.co.za/https-using-letsencrypt-and-traefik-with-k3s/
@@ -49,3 +53,4 @@ In secret ssl-secret, type kubernetes.io/tls:
 tls.crt => fullchain.pem
 tls.key => privkey.pem
 ```
+Do not forget to restart the nginx ingress pods
